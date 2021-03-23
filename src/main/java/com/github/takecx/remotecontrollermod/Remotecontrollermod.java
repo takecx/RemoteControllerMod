@@ -39,8 +39,6 @@ public class Remotecontrollermod {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        apiServer = new APIServer();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -74,6 +72,7 @@ public class Remotecontrollermod {
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
+        apiServer = new APIServer();
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
