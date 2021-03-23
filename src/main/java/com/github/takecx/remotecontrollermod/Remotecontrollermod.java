@@ -25,6 +25,8 @@ public class Remotecontrollermod {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
+    private APIServer apiServer = null;
+
     public Remotecontrollermod() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -37,6 +39,8 @@ public class Remotecontrollermod {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        apiServer = new APIServer();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
