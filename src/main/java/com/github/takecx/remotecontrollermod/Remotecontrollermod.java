@@ -16,6 +16,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetSocketAddress;
+import org.java_websocket.server.WebSocketServer;
+
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -25,7 +28,7 @@ public class Remotecontrollermod {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private APIServer apiServer = null;
+    private WSServer wsServer = null;
 
     public Remotecontrollermod() {
         // Register the setup method for modloading
@@ -72,7 +75,11 @@ public class Remotecontrollermod {
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
-        apiServer = new APIServer();
+        String host = "localhost";
+        int port = 8887;
+
+        WebSocketServer server = new WSServer(new InetSocketAddress(host, port));
+        server.start();
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
