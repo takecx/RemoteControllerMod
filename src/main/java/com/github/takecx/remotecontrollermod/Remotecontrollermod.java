@@ -76,7 +76,7 @@ public class Remotecontrollermod {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
         String host = "localhost";
-        int port = 8887;
+        int port = 53199;
 
         WebSocketServer server = new WSServer(new InetSocketAddress(host, port));
         server.start();
