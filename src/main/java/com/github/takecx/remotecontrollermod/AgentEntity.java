@@ -15,41 +15,55 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
-public class AgentEntity extends LivingEntity {
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.entity.MoverType;
 
-    protected AgentEntity(EntityType<? extends LivingEntity> type, World worldIn) {
+public class AgentEntity extends MobEntity {
+
+    protected AgentEntity(EntityType<? extends MobEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public Iterable<ItemStack> getArmorInventoryList() {
-        return null;
+    public void travel(Vector3d direction) {
+        if (this.isServerWorld() || this.canPassengerSteer()) {
+            // this.setMoveForward(3.0F);
+            double speed = this.getAIMoveSpeed() * 0.3;
+
+            Vector3d lookVector = this.getLookVec();
+            Vector3d moveVector = lookVector.normalize().scale(speed);
+
+            this.setMotion(this.getMotion().add(moveVector).scale(0.91));
+            this.move(MoverType.SELF, this.getMotion());
+        }
+        this.updateLimbs();
     }
 
-    @Override
-    public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
-        return null;
-    }
+    private void updateLimbs() {
+        this.prevLimbSwingAmount = this.limbSwingAmount;
 
-    @Override
-    public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
+        double deltaX = this.getPosX() - this.prevPosX;
+        double deltaY = this.getPosY() - this.prevPosY;
+        double deltaZ = this.getPosZ() - this.prevPosZ;
 
-    }
+        float distance = MathHelper.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+        float moveAmount = Math.min(distance * 4.0F, 1.0F);
 
-    @Override
-    public HandSide getPrimaryHand() {
-        return null;
+        this.limbSwingAmount += (moveAmount - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
     }
 
 //    @Override
