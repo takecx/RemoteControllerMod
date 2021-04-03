@@ -16,6 +16,21 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+// entity
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.item.Item;
+import net.minecraft.item.SpawnEggItem;
+import net.minecraft.item.ItemGroup;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
+
+// websocket
 import java.net.InetSocketAddress;
 import org.java_websocket.server.WebSocketServer;
 
@@ -29,6 +44,14 @@ public class Remotecontrollermod {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private WSServer wsServer = null;
+
+    private static final EntityType AGENT =
+            EntityType.Builder.create(AgentEntity::new, EntityClassification.CREATURE)
+                    .build("agent");
+
+    private static final Item AgentEgg = new SpawnEggItem(AGENT, 0xFFFFFF, 0xFF0000,
+            new Item.Properties()
+                    .group(ItemGroup.MISC));
 
     public Remotecontrollermod() {
         // Register the setup method for modloading
@@ -53,6 +76,13 @@ public class Remotecontrollermod {
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+
+        RenderingRegistry.registerEntityRenderingHandler(AGENT, new IRenderFactory () {
+            @Override
+            public EntityRenderer<? super AgentEntity> createRenderFor(EntityRendererManager manager) {
+                return new AgentRenderer(manager, new AgentModel(), 0.3f);
+            }
+        });
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -90,6 +120,30 @@ public class Remotecontrollermod {
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
+        }
+
+        @SubscribeEvent
+        public static void onRegisterItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
+            LOGGER.info("HELLO from Register Item");
+
+            AgentEgg.setRegistryName(new ResourceLocation("remotecontrollermod", "egg_remote_agent"));
+            itemRegistryEvent.getRegistry().register(AgentEgg);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> entityRegisterEvent) {
+            LOGGER.info("HELLO from Register Entity");
+
+//            GlobalEntityTypeAttributes.put(AGENT,
+//                    AgentEntity.func_233666_p_()
+//                            .createMutableAttribute(Attributes.MAX_HEALTH, 999.0D)
+//                            .createMutableAttribute(Attributes.ATTACK_DAMAGE, 99.0D)
+//                            .createMutableAttribute(Attributes.ATTACK_SPEED, 99.0D)
+//                            .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
+//                            .create());
+
+            AGENT.setRegistryName("remotecontrollermod", "entity_remote_agent");
+            entityRegisterEvent.getRegistry().register(AGENT);
         }
     }
 }
