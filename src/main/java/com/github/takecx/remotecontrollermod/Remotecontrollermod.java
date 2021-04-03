@@ -36,9 +36,12 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.util.stream.Collectors;
 
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("remotecontrollermod")
 public class Remotecontrollermod {
+
+    public static final String MODID = "remotecontrollermod";
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
@@ -87,7 +90,7 @@ public class Remotecontrollermod {
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("remotecontrollermod", "helloworld", () -> {
+        InterModComms.sendTo(MODID, "helloworld", () -> {
             LOGGER.info("Hello world from the MDK");
             return "Hello world";
         });
@@ -126,7 +129,7 @@ public class Remotecontrollermod {
         public static void onRegisterItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
             LOGGER.info("HELLO from Register Item");
 
-            AgentEgg.setRegistryName(new ResourceLocation("remotecontrollermod", "egg_remote_agent"));
+            AgentEgg.setRegistryName(new ResourceLocation(MODID, "egg_remote_agent"));
             itemRegistryEvent.getRegistry().register(AgentEgg);
         }
 
@@ -142,7 +145,7 @@ public class Remotecontrollermod {
 //                            .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
 //                            .create());
 
-            AGENT.setRegistryName("remotecontrollermod", "entity_remote_agent");
+            AGENT.setRegistryName(MODID, "entity_remote_agent");
             entityRegisterEvent.getRegistry().register(AGENT);
         }
     }

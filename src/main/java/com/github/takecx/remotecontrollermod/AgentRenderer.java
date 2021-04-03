@@ -31,6 +31,6 @@ public class AgentRenderer extends MobRenderer {
 
     @Override
     public ResourceLocation getEntityTexture(Entity entity) {
-        return new ResourceLocation("remotecontrollermod", "textures/entity/agent.png" );
+        return new ResourceLocation(Remotecontrollermod.MODID, "textures/entity/agent.png" );
     }
 }
