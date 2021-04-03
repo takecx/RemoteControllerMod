@@ -137,13 +137,13 @@ public class Remotecontrollermod {
         public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> entityRegisterEvent) {
             LOGGER.info("HELLO from Register Entity");
 
-//            GlobalEntityTypeAttributes.put(AGENT,
-//                    AgentEntity.func_233666_p_()
-//                            .createMutableAttribute(Attributes.MAX_HEALTH, 999.0D)
-//                            .createMutableAttribute(Attributes.ATTACK_DAMAGE, 99.0D)
-//                            .createMutableAttribute(Attributes.ATTACK_SPEED, 99.0D)
-//                            .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
-//                            .create());
+            GlobalEntityTypeAttributes.put(AGENT,
+                    AgentEntity.func_233666_p_()
+                            .createMutableAttribute(Attributes.MAX_HEALTH, 999.0D)
+                            .createMutableAttribute(Attributes.ATTACK_DAMAGE, 99.0D)
+                            .createMutableAttribute(Attributes.ATTACK_SPEED, 99.0D)
+                            .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
+                            .create());
 
             AGENT.setRegistryName(MODID, "entity_remote_agent");
             entityRegisterEvent.getRegistry().register(AGENT);
