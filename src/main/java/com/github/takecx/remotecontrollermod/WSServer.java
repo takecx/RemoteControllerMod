@@ -39,7 +39,12 @@ public class WSServer extends WebSocketServer{
     @Override
     public void onMessage(WebSocket conn, String message) {
         System.out.println("received message from "	+ conn.getRemoteSocketAddress() + ": " + message);
-        Object result = this.myAPIHandler.Process(message);
+        Object result = null;
+        try {
+            result = this.myAPIHandler.Process(message);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if(result != null){
             broadcast((String) result);
         }
