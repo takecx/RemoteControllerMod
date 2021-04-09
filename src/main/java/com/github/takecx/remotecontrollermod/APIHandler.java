@@ -59,7 +59,7 @@ public class APIHandler {
     }
 
     private void SummonAgent(Vector3d agentPosIn){
-        if(this.myAgent == null){
+        if(this.myAgent == null || this.myAgent.removed){
             this.myAgent = new AgentEntity(Remotecontrollermod.AGENT,this.myWorld);
         }
         this.myAgent.setPosition(agentPosIn.x,agentPosIn.y,agentPosIn.z);
