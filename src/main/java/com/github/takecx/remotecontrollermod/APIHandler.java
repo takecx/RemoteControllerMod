@@ -61,8 +61,13 @@ public class APIHandler {
     private void SummonAgent(Vector3d agentPosIn){
         if(this.myAgent == null){
             this.myAgent = new AgentEntity(Remotecontrollermod.AGENT,this.myWorld);
-            boolean result = this.myWorld.addEntity(this.myAgent);
         }
         this.myAgent.setPosition(agentPosIn.x,agentPosIn.y,agentPosIn.z);
+        if(!this.myAgent.isAddedToWorld()){
+            boolean result = this.myWorld.addEntity(this.myAgent);
+            if(result == false){
+                System.out.println("Agent add fail!!");
+            }
+        }
     }
 }
