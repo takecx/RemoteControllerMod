@@ -48,7 +48,7 @@ public class Remotecontrollermod {
 
     private WSServer wsServer = null;
 
-    private static final EntityType AGENT =
+    public static final EntityType AGENT =
             EntityType.Builder.create(AgentEntity::new, EntityClassification.CREATURE)
                     .build("agent");
 
