@@ -3,13 +3,25 @@ package com.github.takecx.remotecontrollermod;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.world.ForgeWorldType;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 public class WSServer extends WebSocketServer{
+
+    private APIHandler myAPIHandler = null;
+
     public WSServer(InetSocketAddress address) {
         super(address);
+
+        this.myAPIHandler = new APIHandler();
     }
 
     @Override
@@ -27,6 +39,10 @@ public class WSServer extends WebSocketServer{
     @Override
     public void onMessage(WebSocket conn, String message) {
         System.out.println("received message from "	+ conn.getRemoteSocketAddress() + ": " + message);
+        Object result = this.myAPIHandler.Process(message);
+        if(result != null){
+            broadcast((String) result);
+        }
     }
 
     @Override
@@ -41,5 +57,6 @@ public class WSServer extends WebSocketServer{
 
     @Override
     public void onStart() {
+
         System.out.println("server started successfully");
     }}
