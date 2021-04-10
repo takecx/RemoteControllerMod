@@ -20,6 +20,15 @@ public class APIHandler {
     public APIHandler(){
         MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
         this.myWorld = currentServer.getWorld(World.OVERWORLD);
+        this.searchAgentEntity();
+    }
+
+    private void searchAgentEntity(){
+        for(Entity entity : this.myWorld.getEntitiesIteratable()){
+            if(entity instanceof AgentEntity){
+                this.myAgent = (AgentEntity) entity;
+            }
+        }
     }
 
     private void CheckScreen() throws InterruptedException {
