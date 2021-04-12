@@ -72,7 +72,7 @@ public class APIHandler {
         if(this.myAgent == null || this.myAgent.removed){
             this.myAgent = new AgentEntity(Remotecontrollermod.AGENT,this.myWorld);
         }
-        this.myAgent.setPosition(agentPosIn.x,agentPosIn.y,agentPosIn.z);
+        this.myAgent.setPosition(agentPosIn.x + 0.5D, agentPosIn.y,agentPosIn.z + 0.5D);
         if(!this.myAgent.isAddedToWorld()){
             boolean result = this.myWorld.addEntity(this.myAgent);
             if(result == false){
