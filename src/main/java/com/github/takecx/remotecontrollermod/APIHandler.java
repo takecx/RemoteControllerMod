@@ -14,7 +14,7 @@ import net.minecraft.block.Blocks;
 
 public class APIHandler {
     private ServerWorld myWorld = null;
-    private AgentEntity myAgent = null;
+    public static AgentEntity myAgent = null;
 
     // Commands
     protected static final String SUMMONAGENT = "agent.summon";
