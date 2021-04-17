@@ -1,11 +1,23 @@
 package com.github.takecx.remotecontrollermod;
 
+import com.github.takecx.remotecontrollermod.blocks.StarBlock;
+import com.github.takecx.remotecontrollermod.lists.BlockList;
+import com.github.takecx.remotecontrollermod.lists.ItemList;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
+import net.minecraft.item.*;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -13,15 +25,14 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // entity
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.item.Item;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -124,6 +135,9 @@ public class Remotecontrollermod {
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
+            blockRegistryEvent.getRegistry().registerAll(
+                    BlockList.StarBlock
+            );
         }
 
         @SubscribeEvent
@@ -132,6 +146,13 @@ public class Remotecontrollermod {
 
             AgentEgg.setRegistryName(new ResourceLocation(MODID, "egg_remote_agent"));
             itemRegistryEvent.getRegistry().register(AgentEgg);
+
+            itemRegistryEvent.getRegistry().registerAll(
+                    ItemList.StarIngot = new Item(new Item.Properties().group(ItemGroup.MISC))
+                            .setRegistryName(new ResourceLocation(MODID, "star_ingot")),
+                    ItemList.StarBlock = new BlockItem(BlockList.StarBlock, new Item.Properties().group(ItemGroup.MISC))
+                            .setRegistryName(BlockList.StarBlock.getRegistryName())
+            );
         }
 
         @SubscribeEvent
