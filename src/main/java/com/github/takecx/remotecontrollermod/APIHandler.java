@@ -1,12 +1,16 @@
 package com.github.takecx.remotecontrollermod;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+
+import net.minecraft.block.Blocks;
 
 public class APIHandler {
     private ServerWorld myWorld = null;
@@ -16,6 +20,7 @@ public class APIHandler {
     protected static final String SUMMONAGENT = "agent.summon";
     protected static final String MOVEAGENT = "agent.move";
     protected static final String PLAYERGETPOS = "player.getPos";
+    protected static final String STARTSTAGE = "startStage";
 
     public APIHandler(){
         MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
@@ -63,6 +68,10 @@ public class APIHandler {
             Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
             return playerPos.x + "," + playerPos.y + "," + playerPos.z;
         }
+        else if(cmd.equals(STARTSTAGE)){
+            StartStage(args);
+            return null;
+        }
         else{
             return null;
         }
@@ -77,6 +86,59 @@ public class APIHandler {
             boolean result = this.myWorld.addEntity(this.myAgent);
             if(result == false){
                 System.out.println("Agent add fail!!");
+            }
+        }
+    }
+
+    private void StartStage(String stage) {
+        Vector3d areaVec = new Vector3d(10,10,10);
+        Vector3d referencePos = this.myAgent.getPositionVec();
+        this.ClearStageArea(areaVec,referencePos);
+        this.BuildAreaBoundary(areaVec,referencePos);
+
+        BlockPos pos = new BlockPos(referencePos.x + 1,referencePos.y + 1,referencePos.z + 1);
+        this.myWorld.setBlockState(pos, Blocks.LAVA.getDefaultState());
+
+        BlockPos posTorch = new BlockPos(referencePos.x,referencePos.y + 2,referencePos.z);
+        this.myWorld.setBlockState(pos,Blocks.TORCH.getDefaultState());
+    }
+
+    private void ClearStageArea(Vector3d areaVec, Vector3d referencePos){
+        for (int i = 0; i < areaVec.x; i++) {
+            for (int j = 0; j < areaVec.z; j++) {
+                for (int k = 0; k < areaVec.y; k++) {
+                    BlockPos pos = new BlockPos(referencePos.x + i,referencePos.y + k,referencePos.z + j);
+                    this.myWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
+                }
+            }
+        }
+    }
+
+    private void BuildAreaBoundary(Vector3d areaVec, Vector3d referencePos){
+        for (int i = 0; i < areaVec.x; i++) {
+            for (int j = 0; j < areaVec.y; j++) {
+                BlockPos pos1 = new BlockPos(referencePos.x + i,referencePos.y + j,referencePos.z - 1);
+                this.myWorld.setBlockState(pos1, Blocks.GLASS.getDefaultState());
+                BlockPos pos2 = new BlockPos(referencePos.x + i,referencePos.y + j,referencePos.z + areaVec.z);
+                this.myWorld.setBlockState(pos2, Blocks.GLASS.getDefaultState());
+            }
+        }
+
+        for (int i = 0; i < areaVec.x; i++) {
+            for (int j = 0; j < areaVec.z; j++) {
+                BlockPos pos1 = new BlockPos(referencePos.x + i,referencePos.y - 1,referencePos.z + j);
+                this.myWorld.setBlockState(pos1, Blocks.GLASS.getDefaultState());
+                BlockPos pos2 = new BlockPos(referencePos.x + i,referencePos.y + areaVec.y,referencePos.z + j);
+                this.myWorld.setBlockState(pos2, Blocks.GLASS.getDefaultState());
+            }
+        }
+
+        for (int i = 0; i < areaVec.y; i++) {
+            for (int j = 0; j < areaVec.z; j++) {
+                BlockPos pos1 = new BlockPos(referencePos.x - 1,referencePos.y + i,referencePos.z + j);
+                this.myWorld.setBlockState(pos1, Blocks.GLASS.getDefaultState());
+                BlockPos pos2 = new BlockPos(referencePos.x + areaVec.x,referencePos.y + i,referencePos.z + j);
+                this.myWorld.setBlockState(pos2, Blocks.GLASS.getDefaultState());
             }
         }
     }
