@@ -33,6 +33,7 @@ import net.minecraft.entity.MoverType;
 
 public class AgentEntity extends MobEntity {
 
+    public int score = 0;
     protected AgentEntity(EntityType<? extends MobEntity> type, World worldIn) {
         super(type, worldIn);
     }
