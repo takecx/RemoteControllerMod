@@ -1,0 +1,5 @@
+{
+  "loader": "forge:obj",
+  "model": "remotecontrollermod:models/block/star_block.obj",
+  "flip-v": true
+}
