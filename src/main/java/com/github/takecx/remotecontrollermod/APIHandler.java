@@ -1,6 +1,5 @@
 package com.github.takecx.remotecontrollermod;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.server.MinecraftServer;
@@ -19,6 +18,7 @@ public class APIHandler {
     // Commands
     protected static final String SUMMONAGENT = "agent.summon";
     protected static final String MOVEAGENT = "agent.move";
+    protected static final String ROTATEAGENT = "agent.rotate";
     protected static final String PLAYERGETPOS = "player.getPos";
     protected static final String STARTSTAGE = "startStage";
 
@@ -44,35 +44,44 @@ public class APIHandler {
     }
 
     public Object Process(String commandStrIn) throws InterruptedException {
-        this.CheckScreen();
-        String[] contents = commandStrIn.split("\\(");
-        String cmd = contents[0];
-        String args = contents[1].length() != 1 ? contents[1].split("\\)")[0] : "";
-        if (cmd.equals(SUMMONAGENT)){
-            double x = Double.parseDouble(args.split(",")[0]);
-            double y = Double.parseDouble(args.split(",")[1]);
-            double z = Double.parseDouble(args.split(",")[2]);
-            Vector3d agentPos = new Vector3d(x,y,z);
-            SummonAgent(agentPos);
-            return null;
-        }
-        else if(cmd.equals(MOVEAGENT)){
-            double x = Double.parseDouble(args.split(",")[0]);
-            double y = Double.parseDouble(args.split(",")[1]);
-            double z = Double.parseDouble(args.split(",")[2]);
-            Vector3d moveVal = new Vector3d(x,y,z);
-            this.myAgent.move(MoverType.SELF,moveVal);
-            return null;
-        }
-        else if(cmd.equals(PLAYERGETPOS)){
-            Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
-            return playerPos.x + "," + playerPos.y + "," + playerPos.z;
-        }
-        else if(cmd.equals(STARTSTAGE)){
-            StartStage(args);
-            return null;
-        }
-        else{
+        if(this.myWorld.isRemote == false){
+            this.CheckScreen();
+            String[] contents = commandStrIn.split("\\(");
+            String cmd = contents[0];
+            String args = contents[1].length() != 1 ? contents[1].split("\\)")[0] : "";
+            if (cmd.equals(SUMMONAGENT)){
+                double x = Double.parseDouble(args.split(",")[0]);
+                double y = Double.parseDouble(args.split(",")[1]);
+                double z = Double.parseDouble(args.split(",")[2]);
+                Vector3d agentPos = new Vector3d(x,y,z);
+                SummonAgent(agentPos);
+                return null;
+            }
+            else if(cmd.equals(MOVEAGENT)){
+                double x = Double.parseDouble(args.split(",")[0]);
+                double y = Double.parseDouble(args.split(",")[1]);
+                double z = Double.parseDouble(args.split(",")[2]);
+                Vector3d moveVal = new Vector3d(x,y,z);
+                this.myAgent.move(MoverType.SELF,moveVal);
+                return null;
+            }
+            else if(cmd.equals(ROTATEAGENT)){
+                this.myAgent.setPositionAndRotationDirect(this.myAgent.getPosX() + 0.01D,this.myAgent.getPosY() + 0.01D,
+                        this.myAgent.getPosZ() + 0.01D, Float.parseFloat(args),this.myAgent.rotationPitch,1,true);
+                return null;
+            }
+            else if(cmd.equals(PLAYERGETPOS)){
+                Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
+                return playerPos.x + "," + playerPos.y + "," + playerPos.z;
+            }
+            else if(cmd.equals(STARTSTAGE)){
+                StartStage(args);
+                return null;
+            }
+            else{
+                return null;
+            }
+        }else{
             return null;
         }
     }
