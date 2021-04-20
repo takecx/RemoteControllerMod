@@ -18,6 +18,7 @@ public class APIHandler {
     // Commands
     protected static final String SUMMONAGENT = "agent.summon";
     protected static final String MOVEAGENT = "agent.move";
+    protected static final String STEPFORWARDAGENT = "agent.stepForward";
     protected static final String ROTATEAGENT = "agent.rotate";
     protected static final String PLAYERGETPOS = "player.getPos";
     protected static final String STARTSTAGE = "startStage";
@@ -43,7 +44,7 @@ public class APIHandler {
         }
     }
 
-    public Object Process(String commandStrIn) throws InterruptedException {
+    public Object Process(String commandStrIn) throws Exception {
         if(this.myWorld.isRemote == false){
             this.CheckScreen();
             String[] contents = commandStrIn.split("\\(");
@@ -65,9 +66,41 @@ public class APIHandler {
                 this.myAgent.move(MoverType.SELF,moveVal);
                 return null;
             }
+            else if(cmd.equals(STEPFORWARDAGENT)){
+                Vector3d mov;
+                float agentYaw = this.myAgent.rotationYaw % 360;
+                if(agentYaw == 0){
+                    mov = new Vector3d(0,0,1);
+                }
+                else if(agentYaw == 90){
+                    mov = new Vector3d(1,0,0);
+                }
+                else if(agentYaw == 180){
+                    mov = new Vector3d(0,0,-1);
+                }
+                else if(agentYaw == 270){
+                    mov = new Vector3d(-1,0,0);
+                }
+                else{
+                    throw new Exception("agent direction should be [0, 90, 180, 270]");
+                }
+                this.myAgent.move(MoverType.SELF,mov);
+                Thread.sleep(500);
+                return null;
+            }
             else if(cmd.equals(ROTATEAGENT)){
+                float angle = 0;
+                if(args.equals("right")){
+                    angle = 90;
+                }else if(args.equals("left")){
+                    angle = 270;
+                }else if(args.equals("back")){
+                    angle = 180;
+                }
                 this.myAgent.setPositionAndRotationDirect(this.myAgent.getPosX() + 0.01D,this.myAgent.getPosY() + 0.01D,
-                        this.myAgent.getPosZ() + 0.01D, Float.parseFloat(args),this.myAgent.rotationPitch,1,true);
+                        this.myAgent.getPosZ() + 0.01D, this.myAgent.rotationYaw + angle,this.myAgent.rotationPitch,
+                        1,true);
+                Thread.sleep(500);
                 return null;
             }
             else if(cmd.equals(PLAYERGETPOS)){
