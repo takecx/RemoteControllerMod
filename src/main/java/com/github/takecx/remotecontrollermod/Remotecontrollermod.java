@@ -123,8 +123,8 @@ public class Remotecontrollermod {
         String host = "localhost";
         int port = 53199;
 
-        WebSocketServer server = new WSServer(new InetSocketAddress(host, port));
-        server.start();
+        wsServer = new WSServer(new InetSocketAddress(host, port));
+        wsServer.start();
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
