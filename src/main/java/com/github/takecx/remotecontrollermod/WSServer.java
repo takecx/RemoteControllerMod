@@ -44,6 +44,8 @@ public class WSServer extends WebSocketServer{
             result = this.myAPIHandler.Process(message);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if(result != null){
             broadcast((String) result);
