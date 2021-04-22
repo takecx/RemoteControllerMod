@@ -73,13 +73,13 @@ public class APIHandler {
                     mov = new Vector3d(0,0,1);
                 }
                 else if(agentYaw == 90){
-                    mov = new Vector3d(1,0,0);
+                    mov = new Vector3d(-1,0,0);
                 }
                 else if(agentYaw == 180){
                     mov = new Vector3d(0,0,-1);
                 }
                 else if(agentYaw == 270){
-                    mov = new Vector3d(-1,0,0);
+                    mov = new Vector3d(1,0,0);
                 }
                 else{
                     throw new Exception("agent direction should be [0, 90, 180, 270]");
