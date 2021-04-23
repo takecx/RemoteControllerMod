@@ -53,4 +53,11 @@ public class AgentEntity extends MobEntity {
             }
         }
     }
+
+    public void Happy() throws InterruptedException {
+        Thread.sleep(500);
+        move(MoverType.SELF,new Vector3d(0,1,0));
+        Thread.sleep(500);
+        move(MoverType.SELF,new Vector3d(0,1,0));
+    }
 }
