@@ -1,7 +1,9 @@
 package com.github.takecx.remotecontrollermod;
 
 import com.github.takecx.remotecontrollermod.lists.StageList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -9,8 +11,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
-
-import net.minecraft.block.Blocks;
 
 public class APIHandler {
     private ServerWorld myWorld = null;
@@ -33,10 +33,12 @@ public class APIHandler {
     private void searchAgentEntity(){
         for(Entity entity : this.myWorld.getEntitiesIteratable()){
             if(entity instanceof AgentEntity){
-                this.myAgent = (AgentEntity) entity;
-                break;
+                myAgent = (AgentEntity) entity;
+                return;
             }
         }
+        // if there is no AgentEntity, create one.
+        myAgent = new AgentEntity(Remotecontrollermod.AGENT,this.myWorld);
     }
 
     private void CheckScreen() throws InterruptedException {
