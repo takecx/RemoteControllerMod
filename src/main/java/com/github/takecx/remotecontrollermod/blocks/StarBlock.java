@@ -68,6 +68,13 @@ public class StarBlock extends Block {
         if (entityIn instanceof AgentEntity){
             ((AgentEntity) entityIn).score += state.get(PROPERTY_POINT);
             worldIn.removeBlock(pos,false);
+
+            // jump
+            try {
+                ((AgentEntity) entityIn).Happy();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
