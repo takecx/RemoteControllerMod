@@ -30,72 +30,27 @@ import javax.annotation.Nullable;
 
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.entity.MoverType;
+import org.lwjgl.system.CallbackI;
 
 public class AgentEntity extends MobEntity {
 
     public int score = 0;
-    protected AgentEntity(EntityType<? extends MobEntity> type, World worldIn) {
+
+    public AgentEntity(EntityType<? extends MobEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    @Override
-    public void travel(Vector3d direction) {
-        if (this.isServerWorld() || this.canPassengerSteer()) {
-            // this.setMoveForward(3.0F);
-            double speed = this.getAIMoveSpeed() * 0.3;
-
-            Vector3d lookVector = this.getLookVec();
-            Vector3d moveVector = lookVector.normalize().scale(speed);
-
-            this.setMotion(this.getMotion().add(moveVector).scale(0.91));
-            this.move(MoverType.SELF, this.getMotion());
+    public static void SummonAgent(Vector3d referencePos, ServerWorld worldIn, AgentEntity myAgent) {
+        if(myAgent == null || myAgent.removed){
+            myAgent = new AgentEntity(Remotecontrollermod.AGENT,worldIn);
         }
-        this.updateLimbs();
+        myAgent.setPositionAndRotationDirect(referencePos.x + 0.5D, referencePos.y,referencePos.z + 0.5D, 0 ,
+                myAgent.rotationPitch,1,true);
+        if(!myAgent.isAddedToWorld()){
+            boolean result = worldIn.addEntity(myAgent);
+            if(result == false){
+                System.out.println("Agent add fail!!");
+            }
+        }
     }
-
-    private void updateLimbs() {
-        this.prevLimbSwingAmount = this.limbSwingAmount;
-
-        double deltaX = this.getPosX() - this.prevPosX;
-        double deltaY = this.getPosY() - this.prevPosY;
-        double deltaZ = this.getPosZ() - this.prevPosZ;
-
-        float distance = MathHelper.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-        float moveAmount = Math.min(distance * 4.0F, 1.0F);
-
-        this.limbSwingAmount += (moveAmount - this.limbSwingAmount) * 0.4F;
-        this.limbSwing += this.limbSwingAmount;
-    }
-
-//    @Override
-//    public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-//        return null;
-//    }
-
-//    protected void registerGoals() {
-//        this.goalSelector.addGoal(1, new SwimGoal(this));
-//        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
-//        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-//        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-//        this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-//        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-//        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-//        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-//        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setCallsForHelp());
-//        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
-//    }
-
-//    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-////        if(!this.isTamed()) {
-////            this.setInLove(player);
-////            this.setTamedBy(player);
-////        }
-//        return ActionResultType.SUCCESS;
-//    }
-
-//    @Nullable
-//    @Override
-//    public AgeableEntity createChild(ServerWorld world, AgeableEntity mate) {
-//        return null;
-//    }
 }
