@@ -124,13 +124,12 @@ public class APIHandler {
 
     private void SummonAgent(Vector3d agentPosIn){
         AgentEntity.SummonAgent(agentPosIn,this.myWorld,this.myAgent);
-
     }
 
     private void StartStage(String stage) {
-        Vector3d areaVec = new Vector3d(11,11,11);
-        Vector3d referencePos = this.myAgent.getPositionVec();
-        StageList.Stages.get(stage).ConstructStage(areaVec,referencePos,this.myWorld,this.myAgent);
+        Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
+        Vector3d referencePos = new Vector3d(Math.ceil(playerPos.x),Math.ceil(playerPos.y),Math.ceil(playerPos.z));
+        StageList.Stages.get(stage).ConstructStage(referencePos,this.myWorld,this.myAgent);
     }
 
 }
