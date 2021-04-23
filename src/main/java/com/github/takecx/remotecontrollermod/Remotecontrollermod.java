@@ -9,7 +9,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.*;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolType;
@@ -120,11 +122,14 @@ public class Remotecontrollermod {
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
-        String host = "localhost";
-        int port = 53199;
+        if(!event.getServer().getWorld(World.OVERWORLD).isRemote){
+            String host = "localhost";
+//        int port = 53199;
+            int port = 14711;
 
-        wsServer = new WSServer(new InetSocketAddress(host, port));
-        wsServer.start();
+            wsServer = new WSServer(new InetSocketAddress(host, port));
+            wsServer.start();
+        }
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
