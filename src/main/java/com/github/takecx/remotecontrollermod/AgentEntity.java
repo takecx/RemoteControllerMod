@@ -44,7 +44,7 @@ public class AgentEntity extends MobEntity {
         if(myAgent == null || myAgent.removed){
             myAgent = new AgentEntity(Remotecontrollermod.AGENT,worldIn);
         }
-        myAgent.setPositionAndRotationDirect(referencePos.x + 0.5D, referencePos.y,referencePos.z + 0.5D, 0 ,
+        myAgent.setPositionAndRotationDirect(referencePos.x, referencePos.y,referencePos.z + 0.5D, 0 ,
                 myAgent.rotationPitch,1,true);
         if(!myAgent.isAddedToWorld()){
             boolean result = worldIn.addEntity(myAgent);
