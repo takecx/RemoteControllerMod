@@ -1,5 +1,6 @@
 package com.github.takecx.remotecontrollermod;
 
+import com.github.takecx.remotecontrollermod.lists.StageList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.server.MinecraftServer;
@@ -120,18 +121,8 @@ public class APIHandler {
     }
 
     private void SummonAgent(Vector3d agentPosIn){
-        if(this.myAgent == null || this.myAgent.removed){
-            this.myAgent = new AgentEntity(Remotecontrollermod.AGENT,this.myWorld);
-        }
-//        this.myAgent.setPosition(agentPosIn.x + 0.5D, agentPosIn.y,agentPosIn.z + 0.5D);
-        this.myAgent.setPositionAndRotationDirect(agentPosIn.x + 0.5D, agentPosIn.y,agentPosIn.z + 0.5D, 0 ,
-                this.myAgent.rotationPitch,1,true);
-        if(!this.myAgent.isAddedToWorld()){
-            boolean result = this.myWorld.addEntity(this.myAgent);
-            if(result == false){
-                System.out.println("Agent add fail!!");
-            }
-        }
+        AgentEntity.SummonAgent(agentPosIn,this.myWorld,this.myAgent);
+
     }
 
     private void StartStage(String stage) {
