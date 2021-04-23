@@ -135,55 +135,9 @@ public class APIHandler {
     }
 
     private void StartStage(String stage) {
-        Vector3d areaVec = new Vector3d(10,10,10);
+        Vector3d areaVec = new Vector3d(11,11,11);
         Vector3d referencePos = this.myAgent.getPositionVec();
-        this.ClearStageArea(areaVec,referencePos);
-        this.BuildAreaBoundary(areaVec,referencePos);
-
-        BlockPos pos = new BlockPos(referencePos.x + 1,referencePos.y + 1,referencePos.z + 1);
-        this.myWorld.setBlockState(pos, Blocks.LAVA.getDefaultState());
-
-        BlockPos posTorch = new BlockPos(referencePos.x,referencePos.y + 2,referencePos.z);
-        this.myWorld.setBlockState(pos,Blocks.TORCH.getDefaultState());
+        StageList.Stages.get(stage).ConstructStage(areaVec,referencePos,this.myWorld,this.myAgent);
     }
 
-    private void ClearStageArea(Vector3d areaVec, Vector3d referencePos){
-        for (int i = 0; i < areaVec.x; i++) {
-            for (int j = 0; j < areaVec.z; j++) {
-                for (int k = 0; k < areaVec.y; k++) {
-                    BlockPos pos = new BlockPos(referencePos.x + i,referencePos.y + k,referencePos.z + j);
-                    this.myWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
-                }
-            }
-        }
-    }
-
-    private void BuildAreaBoundary(Vector3d areaVec, Vector3d referencePos){
-        for (int i = 0; i < areaVec.x; i++) {
-            for (int j = 0; j < areaVec.y; j++) {
-                BlockPos pos1 = new BlockPos(referencePos.x + i,referencePos.y + j,referencePos.z - 1);
-                this.myWorld.setBlockState(pos1, Blocks.GLASS.getDefaultState());
-                BlockPos pos2 = new BlockPos(referencePos.x + i,referencePos.y + j,referencePos.z + areaVec.z);
-                this.myWorld.setBlockState(pos2, Blocks.GLASS.getDefaultState());
-            }
-        }
-
-        for (int i = 0; i < areaVec.x; i++) {
-            for (int j = 0; j < areaVec.z; j++) {
-                BlockPos pos1 = new BlockPos(referencePos.x + i,referencePos.y - 1,referencePos.z + j);
-                this.myWorld.setBlockState(pos1, Blocks.GLASS.getDefaultState());
-                BlockPos pos2 = new BlockPos(referencePos.x + i,referencePos.y + areaVec.y,referencePos.z + j);
-                this.myWorld.setBlockState(pos2, Blocks.GLASS.getDefaultState());
-            }
-        }
-
-        for (int i = 0; i < areaVec.y; i++) {
-            for (int j = 0; j < areaVec.z; j++) {
-                BlockPos pos1 = new BlockPos(referencePos.x - 1,referencePos.y + i,referencePos.z + j);
-                this.myWorld.setBlockState(pos1, Blocks.GLASS.getDefaultState());
-                BlockPos pos2 = new BlockPos(referencePos.x + areaVec.x,referencePos.y + i,referencePos.z + j);
-                this.myWorld.setBlockState(pos2, Blocks.GLASS.getDefaultState());
-            }
-        }
-    }
 }
