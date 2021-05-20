@@ -5,9 +5,13 @@ import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -208,6 +212,12 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(CHAT)) {
+                if(!myWorld.isRemote){
+                    for(ServerPlayerEntity p : myWorld.getPlayers()){
+                        ITextComponent msg = new StringTextComponent(args);
+                        p.sendMessage(msg,p.getUniqueID());
+                    }
+                }
                 return null;
             }
             else if (cmd.equals(GIVEENCHANT)) {
