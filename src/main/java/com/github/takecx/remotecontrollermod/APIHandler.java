@@ -1,16 +1,19 @@
 package com.github.takecx.remotecontrollermod;
 
 import com.github.takecx.remotecontrollermod.lists.StageList;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
+import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+
+import java.util.*;
 
 public class APIHandler {
     private ServerWorld myWorld = null;
@@ -40,6 +43,7 @@ public class APIHandler {
     protected static final String ENTITYSETPOS = "entity.setPos";
     protected static final String CHAT = "chat.post";
     protected static final String GIVEENCHANT = "giveEnchant";
+
     public APIHandler(){
         MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
         this.myWorld = currentServer.getWorld(World.OVERWORLD);
@@ -137,6 +141,11 @@ public class APIHandler {
                 return null;
                 Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
                 return playerPos.x + "," + playerPos.y + "," + playerPos.z;
+            }else if (cmd.equals(MOVECAMERA)) {
+                Vector3d arg = new Vector3d(0.5F, 0.5F, 0.5F);
+                MoveCameraMessageToClient moveCameraMessageToClient = new MoveCameraMessageToClient(arg);
+                Remotecontrollermod.simpleChannel.send(PacketDistributor.ALL.noArg(), moveCameraMessageToClient);
+                return null;
             }
             else if(cmd.equals(STARTSTAGE)){
                 StartStage(args);
