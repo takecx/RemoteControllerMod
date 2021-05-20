@@ -139,6 +139,7 @@ public class APIHandler {
             } else if (cmd.equals(STARTSTAGE)) {
                 StartStage(args);
                 return null;
+            } else if (cmd.equals(PLAYERGETPOS)) {
                 Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
                 return playerPos.x + "," + playerPos.y + "," + playerPos.z;
             }else if (cmd.equals(MOVECAMERA)) {
@@ -147,11 +148,71 @@ public class APIHandler {
                 Remotecontrollermod.simpleChannel.send(PacketDistributor.ALL.noArg(), moveCameraMessageToClient);
                 return null;
             }
-            else if(cmd.equals(STARTSTAGE)){
-                StartStage(args);
+            else if (cmd.equals(WORLDGETPLAYERIDS)) {
+                List<Integer> players = new ArrayList<Integer>();
+                for (PlayerEntity p : myWorld.getPlayers()) {
+                    players.add(p.getEntityId());
+                }
+                Collections.sort(players);
+
+                StringBuilder ids = new StringBuilder();
+                for (Integer id : players) {
+                    if (ids.length() > 0)
+                        ids.append("|");
+                    ids.append(id);
+                }
+                return ids.toString();
+            }
+            else if (cmd.equals(GETBLOCKWITHDATA)) {
+                String[] coords = args.split(",");
+                BlockPos targetPos = new BlockPos(Integer.parseInt(coords[0]),Integer.parseInt(coords[1]),Integer.parseInt(coords[2]));
+                BlockState targetState = this.myWorld.getBlockState(targetPos);
+                return targetState.toString();
+            }
+            else if (cmd.equals(SETBLOCK)) {
                 return null;
             }
-            else{
+            else if (cmd.equals(SETBLOCKS)) {
+                return null;
+            }
+            else if (cmd.equals(WORLDSPAWNENTITY)) {
+                if(!myWorld.isRemote) {
+                    String[] arg_content = args.split(",");
+                    BlockPos targetPos = new BlockPos(Integer.parseInt(arg_content[1]), Integer.parseInt(arg_content[2]), Integer.parseInt(arg_content[3]));
+                    Optional<EntityType<?>> targetEntity = EntityType.byKey(arg_content[0]);
+                    targetEntity.ifPresent(entityType -> {
+                        Entity entity = entityType.create(myWorld);
+                        assert entity != null;
+                        entity.setPosition(targetPos.getX(), targetPos.getY(), targetPos.getZ());
+                        myWorld.addEntity(entity);
+                    });
+                }
+                return null;
+            }
+            else if (cmd.equals(WORLDCHANGEWEATHER)) {
+                return null;
+            }
+            else if (cmd.equals(WORLDCHANGEGAMEMODE)) {
+                return null;
+            }
+            else if (cmd.equals(WORLDCHANGEDIFFICULTY)) {
+                return null;
+            }
+            else if (cmd.equals(WORLDSPAWNPARTICLE)) {
+                return null;
+            }
+            else if (cmd.equals(ENTITYGETPOS)) {
+                return null;
+            }
+            else if (cmd.equals(ENTITYSETPOS)) {
+                return null;
+            }
+            else if (cmd.equals(CHAT)) {
+                return null;
+            }
+            else if (cmd.equals(GIVEENCHANT)) {
+                return null;
+            } else {
                 return null;
             }
         }else{
