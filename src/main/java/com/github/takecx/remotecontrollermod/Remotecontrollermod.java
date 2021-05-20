@@ -1,25 +1,17 @@
 package com.github.takecx.remotecontrollermod;
 
-import com.github.takecx.remotecontrollermod.blocks.StarBlock;
 import com.github.takecx.remotecontrollermod.lists.BlockList;
 import com.github.takecx.remotecontrollermod.lists.ItemList;
-import net.minecraft.block.AbstractBlock;
+import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
+import com.github.takecx.remotecontrollermod.messages.SpawnEntityMessageToClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.*;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -27,8 +19,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,9 +37,11 @@ import net.minecraft.entity.ai.attributes.Attributes;
 
 // websocket
 import java.net.InetSocketAddress;
-import org.java_websocket.server.WebSocketServer;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -56,6 +50,13 @@ public class Remotecontrollermod {
 
     public static final String MODID = "remotecontrollermod";
     public static boolean isShowingMenu = false;
+
+    // for network
+    public static SimpleChannel simpleChannel;    // used to transmit your network messages
+    public static final ResourceLocation simpleChannelRL = new ResourceLocation("remotecontrollmod", "rcmchannel");
+    public static final String MESSAGE_PROTOCOL_VERSION = "1.0";  // a version number for the protocol you're using.  Can be used to maintain backward
+    public static final byte MOVE_CAMERA_MESSAGE_ID = 63;
+    public static final byte SPAWN_ENTITY_MESSAGE_ID = 64;
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
@@ -175,5 +176,41 @@ public class Remotecontrollermod {
             AGENT.setRegistryName(MODID, "entity_remote_agent");
             entityRegisterEvent.getRegistry().register(AGENT);
         }
+
+        // Register a channel for your packets.  You can send multiple types of packets on the same channel.  Most mods will only ever
+        //  need one channel.
+        @SubscribeEvent
+        public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
+
+            simpleChannel = NetworkRegistry.newSimpleChannel(simpleChannelRL, () -> MESSAGE_PROTOCOL_VERSION,
+                    MessageHandlerOnClient::isThisProtocolAcceptedByClient,
+                    MessageHandlerOnServer::isThisProtocolAcceptedByServer);
+
+            // Register the two different types of messages:
+            //  AirStrike, which is sent from the client to the server to say "call an air strike on {this location} that I just clicked on"
+            //  TargetEffect, which is sent from the server to all clients to say "someone called an air strike on {this location}, draw some particles there"
+
+//            simpleChannel.registerMessage(AIRSTRIKE_MESSAGE_ID, AirstrikeMessageToServer.class,
+//                    AirstrikeMessageToServer::encode, AirstrikeMessageToServer::decode,
+//                    MessageHandlerOnServer::onMessageReceived,
+//                    Optional.of(PLAY_TO_SERVER));
+
+            simpleChannel.registerMessage(MOVE_CAMERA_MESSAGE_ID, MoveCameraMessageToClient.class,
+                    MoveCameraMessageToClient::encode, MoveCameraMessageToClient::decode,
+                    MessageHandlerOnClient::onMoveCameraMessageReceived,
+                    Optional.of(PLAY_TO_CLIENT));
+            simpleChannel.registerMessage(SPAWN_ENTITY_MESSAGE_ID, SpawnEntityMessageToClient.class,
+                    SpawnEntityMessageToClient::encode, SpawnEntityMessageToClient::decode,
+                    MessageHandlerOnClient::onSpawnEntityMessageReceived,
+                    Optional.of(PLAY_TO_CLIENT));
+
+            // it is possible to register the same message class and handler on both sides if you want, eg,
+//    simpleChannel.registerMessage(AIRSTRIKE_MESSAGE_ID, AirstrikeMessageToServer.class,
+//            AirstrikeMessageBothDirections::encode, AirstrikeMessageBothDirections::decode,
+//            MessageHandlerOnBothSides::onMessage);
+            // I recommend that you don't do this because it can lead to crashes (and in particular dedicated server problems) if you aren't
+            //    very careful to keep the client-side and server-side code separate
+        }
+
     }
 }
