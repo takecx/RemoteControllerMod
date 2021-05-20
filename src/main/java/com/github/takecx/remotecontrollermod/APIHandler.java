@@ -16,14 +16,30 @@ public class APIHandler {
     private ServerWorld myWorld = null;
     public static AgentEntity myAgent = null;
 
-    // Commands
+    // Agent
     protected static final String SUMMONAGENT = "agent.summon";
     protected static final String MOVEAGENT = "agent.move";
     protected static final String STEPFORWARDAGENT = "agent.stepForward";
+    protected static final String JUMPFORWARDAGENT = "agent.jumpForward";
     protected static final String ROTATEAGENT = "agent.rotate";
     protected static final String PLAYERGETPOS = "player.getPos";
     protected static final String STARTSTAGE = "startStage";
+    protected static final String MOVECAMERA = "moveCamera";
 
+    // Commands
+    protected static final String WORLDGETPLAYERIDS = "world.getPlayerIds";
+    protected static final String GETBLOCKWITHDATA = "world.getBlockWithData";
+    protected static final String SETBLOCK = "world.setBlock";
+    protected static final String SETBLOCKS = "world.setBlocks";
+    protected static final String WORLDSPAWNENTITY = "world.spawnEntity";
+    protected static final String WORLDCHANGEWEATHER = "world.changeWeather";
+    protected static final String WORLDCHANGEGAMEMODE = "world.changeGameMode";
+    protected static final String WORLDCHANGEDIFFICULTY = "world.changeDifficulty";
+    protected static final String WORLDSPAWNPARTICLE = "world.spawnParticle";
+    protected static final String ENTITYGETPOS = "entity.getPos";
+    protected static final String ENTITYSETPOS = "entity.setPos";
+    protected static final String CHAT = "chat.post";
+    protected static final String GIVEENCHANT = "giveEnchant";
     public APIHandler(){
         MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
         this.myWorld = currentServer.getWorld(World.OVERWORLD);
@@ -48,65 +64,77 @@ public class APIHandler {
     }
 
     public Object Process(String commandStrIn) throws Exception {
-        if(this.myWorld.isRemote == false){
+        if(this.myWorld.isRemote == false) {
             this.CheckScreen();
             String[] contents = commandStrIn.split("\\(");
             String cmd = contents[0];
             String args = contents[1].length() != 1 ? contents[1].split("\\)")[0] : "";
-            if (cmd.equals(SUMMONAGENT)){
+            if (cmd.equals(SUMMONAGENT)) {
                 double x = Double.parseDouble(args.split(",")[0]);
                 double y = Double.parseDouble(args.split(",")[1]);
                 double z = Double.parseDouble(args.split(",")[2]);
-                Vector3d agentPos = new Vector3d(x,y,z);
+                Vector3d agentPos = new Vector3d(x, y, z);
                 SummonAgent(agentPos);
                 return null;
-            }
-            else if(cmd.equals(MOVEAGENT)){
+            } else if (cmd.equals(MOVEAGENT)) {
                 double x = Double.parseDouble(args.split(",")[0]);
                 double y = Double.parseDouble(args.split(",")[1]);
                 double z = Double.parseDouble(args.split(",")[2]);
-                Vector3d moveVal = new Vector3d(x,y,z);
-                this.myAgent.move(MoverType.SELF,moveVal);
+                Vector3d moveVal = new Vector3d(x, y, z);
+                this.myAgent.move(MoverType.SELF, moveVal);
                 return null;
-            }
-            else if(cmd.equals(STEPFORWARDAGENT)){
+            } else if (cmd.equals(STEPFORWARDAGENT)) {
                 Vector3d mov;
                 float agentYaw = this.myAgent.rotationYaw % 360;
-                if(agentYaw == 0){
-                    mov = new Vector3d(0,0,1);
-                }
-                else if(agentYaw == 90){
-                    mov = new Vector3d(-1,0,0);
-                }
-                else if(agentYaw == 180){
-                    mov = new Vector3d(0,0,-1);
-                }
-                else if(agentYaw == 270){
-                    mov = new Vector3d(1,0,0);
-                }
-                else{
+                if (agentYaw == 0) {
+                    mov = new Vector3d(0, 0, 1);
+                } else if (agentYaw == 90) {
+                    mov = new Vector3d(-1, 0, 0);
+                } else if (agentYaw == 180) {
+                    mov = new Vector3d(0, 0, -1);
+                } else if (agentYaw == 270) {
+                    mov = new Vector3d(1, 0, 0);
+                } else {
                     throw new Exception("agent direction should be [0, 90, 180, 270]");
                 }
-                this.myAgent.move(MoverType.SELF,mov);
+                this.myAgent.move(MoverType.SELF, mov);
                 Thread.sleep(500);
                 return null;
-            }
-            else if(cmd.equals(ROTATEAGENT)){
+            } else if (cmd.equals(JUMPFORWARDAGENT)) {
+                Vector3d mov;
+                float agentYaw = this.myAgent.rotationYaw % 360;
+                if (agentYaw == 0) {
+                    mov = new Vector3d(0, 1, 1);
+                } else if (agentYaw == 90) {
+                    mov = new Vector3d(-1, 1, 0);
+                } else if (agentYaw == 180) {
+                    mov = new Vector3d(0, 1, -1);
+                } else if (agentYaw == 270) {
+                    mov = new Vector3d(1, 1, 0);
+                } else {
+                    throw new Exception("agent direction should be [0, 90, 180, 270]");
+                }
+                this.myAgent.move(MoverType.SELF, mov);
+                Thread.sleep(500);
+                return null;
+
+            } else if (cmd.equals(ROTATEAGENT)) {
                 float angle = 0;
-                if(args.equals("right")){
+                if (args.equals("right")) {
                     angle = 90;
-                }else if(args.equals("left")){
+                } else if (args.equals("left")) {
                     angle = 270;
-                }else if(args.equals("back")){
+                } else if (args.equals("back")) {
                     angle = 180;
                 }
-                this.myAgent.setPositionAndRotationDirect(this.myAgent.getPosX() + 0.01D,this.myAgent.getPosY() + 0.01D,
-                        this.myAgent.getPosZ() + 0.01D, this.myAgent.rotationYaw + angle,this.myAgent.rotationPitch,
-                        1,true);
+                this.myAgent.setPositionAndRotationDirect(this.myAgent.getPosX() + 0.01D, this.myAgent.getPosY() + 0.01D,
+                        this.myAgent.getPosZ() + 0.01D, this.myAgent.rotationYaw + angle, this.myAgent.rotationPitch,
+                        1, true);
                 Thread.sleep(500);
                 return null;
-            }
-            else if(cmd.equals(PLAYERGETPOS)){
+            } else if (cmd.equals(STARTSTAGE)) {
+                StartStage(args);
+                return null;
                 Vector3d playerPos = this.myWorld.getPlayers().get(0).getPositionVec();
                 return playerPos.x + "," + playerPos.y + "," + playerPos.z;
             }
