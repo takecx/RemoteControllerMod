@@ -12,6 +12,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -215,6 +216,18 @@ public class APIHandler {
                 }
             }
             else if (cmd.equals(WORLDCHANGEDIFFICULTY)) {
+                if(args.equals(String.valueOf(Difficulty.PEACEFUL.getId()))){
+                    myWorld.getServer().setDifficultyForAllWorlds(Difficulty.PEACEFUL,true);
+                }
+                else if(args.equals(String.valueOf(Difficulty.EASY.getId()))) {
+                    myWorld.getServer().setDifficultyForAllWorlds(Difficulty.EASY,true);
+                }
+                else if(args.equals(String.valueOf(Difficulty.NORMAL.getId()))) {
+                    myWorld.getServer().setDifficultyForAllWorlds(Difficulty.NORMAL,true);
+                }
+                else if(args.equals(String.valueOf(Difficulty.HARD.getId()))) {
+                    myWorld.getServer().setDifficultyForAllWorlds(Difficulty.HARD,true);
+                }
                 return null;
             }
             else if (cmd.equals(WORLDSPAWNPARTICLE)) {
