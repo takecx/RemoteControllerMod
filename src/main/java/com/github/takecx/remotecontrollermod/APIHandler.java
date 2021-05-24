@@ -181,29 +181,25 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(WORLDSPAWNENTITY)) {
-                if(!myWorld.isRemote) {
-                    String[] arg_content = args.split(",");
-                    BlockPos targetPos = new BlockPos(Integer.parseInt(arg_content[1]), Integer.parseInt(arg_content[2]), Integer.parseInt(arg_content[3]));
-                    Optional<EntityType<?>> targetEntity = EntityType.byKey(arg_content[0]);
-                    targetEntity.ifPresent(entityType -> {
-                        Entity entity = entityType.create(myWorld);
-                        assert entity != null;
-                        entity.setPosition(targetPos.getX(), targetPos.getY(), targetPos.getZ());
-                        myWorld.addEntity(entity);
-                    });
-                }
+                String[] arg_content = args.split(",");
+                BlockPos targetPos = new BlockPos(Integer.parseInt(arg_content[1]), Integer.parseInt(arg_content[2]), Integer.parseInt(arg_content[3]));
+                Optional<EntityType<?>> targetEntity = EntityType.byKey(arg_content[0]);
+                targetEntity.ifPresent(entityType -> {
+                    Entity entity = entityType.create(myWorld);
+                    assert entity != null;
+                    entity.setPosition(targetPos.getX(), targetPos.getY(), targetPos.getZ());
+                    myWorld.addEntity(entity);
+                });
                 return null;
             }
             else if (cmd.equals(WORLDCHANGEWEATHER)) {
-                if(!myWorld.isRemote){
-                    int weatherTime = 600;
-                    if(args.equals("clear")){
-                        myWorld.setWeather(weatherTime, 0, false, false);
-                    }else if(args.equals("rain")){
-                        myWorld.setWeather(0, weatherTime, true, false);
-                    }else if(args.equals("thunder")){
-                        myWorld.setWeather(0, weatherTime, true, true);
-                    }
+                int weatherTime = 600;
+                if(args.equals("clear")){
+                    myWorld.setWeather(weatherTime, 0, false, false);
+                }else if(args.equals("rain")){
+                    myWorld.setWeather(0, weatherTime, true, false);
+                }else if(args.equals("thunder")){
+                    myWorld.setWeather(0, weatherTime, true, true);
                 }
                 return null;
             }
@@ -231,19 +227,16 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(CHAT)) {
-                if(!myWorld.isRemote){
-                    for(ServerPlayerEntity p : myWorld.getPlayers()){
-                        ITextComponent msg = new StringTextComponent(args);
-                        p.sendMessage(msg,p.getUniqueID());
-                    }
+                for(ServerPlayerEntity p : myWorld.getPlayers()){
+                    ITextComponent msg = new StringTextComponent(args);
+                    p.sendMessage(msg,p.getUniqueID());
                 }
                 return null;
             }
             else if (cmd.equals(GIVEENCHANT)) {
                 return null;
-            } else {
-                return null;
             }
+            return null;
         }else{
             return null;
         }
