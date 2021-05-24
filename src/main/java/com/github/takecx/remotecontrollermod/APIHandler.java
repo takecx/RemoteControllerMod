@@ -234,7 +234,8 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(ENTITYGETPOS)) {
-                return null;
+                BlockPos playerPos = myWorld.getPlayers().get(0).getPosition();
+                return playerPos.getX() + "," + playerPos.getY() + "," + playerPos.getZ();
             }
             else if (cmd.equals(ENTITYSETPOS)) {
                 return null;
