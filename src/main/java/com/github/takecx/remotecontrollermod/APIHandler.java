@@ -194,6 +194,16 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(WORLDCHANGEWEATHER)) {
+                if(!myWorld.isRemote){
+                    int weatherTime = 600;
+                    if(args.equals("clear")){
+                        myWorld.setWeather(weatherTime, 0, false, false);
+                    }else if(args.equals("rain")){
+                        myWorld.setWeather(0, weatherTime, true, false);
+                    }else if(args.equals("thunder")){
+                        myWorld.setWeather(0, weatherTime, true, true);
+                    }
+                }
                 return null;
             }
             else if (cmd.equals(WORLDCHANGEGAMEMODE)) {
