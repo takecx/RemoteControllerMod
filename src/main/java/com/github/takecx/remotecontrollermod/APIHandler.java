@@ -12,6 +12,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -207,7 +208,15 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(WORLDCHANGEGAMEMODE)) {
-                return null;
+                if (args.equals(String.valueOf(GameType.SURVIVAL.getID()))) {
+                    ChangeGameType(GameType.SURVIVAL);
+                } else if (args.equals(String.valueOf(GameType.CREATIVE.getID()))) {
+                    ChangeGameType(GameType.CREATIVE);
+                } else if (args.equals(String.valueOf(GameType.ADVENTURE.getID()))) {
+                    ChangeGameType(GameType.ADVENTURE);
+                } else if (args.equals(String.valueOf(GameType.SPECTATOR.getID()))) {
+                    ChangeGameType(GameType.SPECTATOR);
+                }
             }
             else if (cmd.equals(WORLDCHANGEDIFFICULTY)) {
                 return null;
@@ -237,6 +246,14 @@ public class APIHandler {
             }
         }else{
             return null;
+        }
+    }
+
+    private void ChangeGameType(GameType gameTypeIn){
+        for(ServerPlayerEntity serverplayerentity : myWorld.getPlayers()) {
+            if (serverplayerentity.interactionManager.getGameType() != gameTypeIn) {
+                serverplayerentity.setGameType(gameTypeIn);
+            }
         }
     }
 
