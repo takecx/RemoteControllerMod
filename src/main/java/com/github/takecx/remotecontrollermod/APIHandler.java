@@ -4,6 +4,7 @@ import com.github.takecx.remotecontrollermod.lists.StageList;
 import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -263,6 +264,9 @@ public class APIHandler {
                 return playerPos.getX() + "," + playerPos.getY() + "," + playerPos.getZ();
             }
             else if (cmd.equals(ENTITYSETPOS)) {
+                String[] arg_items = args.split(",");
+                assert Minecraft.getInstance().player != null;
+                Minecraft.getInstance().player.sendChatMessage("/tp " + Double.parseDouble(arg_items[1]) + " " + Double.parseDouble(arg_items[2]) + " " + Double.parseDouble(arg_items[3]));
                 return null;
             }
             else if (cmd.equals(CHAT)) {
