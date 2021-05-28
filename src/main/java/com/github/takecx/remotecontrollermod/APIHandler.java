@@ -2,11 +2,13 @@ package com.github.takecx.remotecontrollermod;
 
 import com.github.takecx.remotecontrollermod.lists.StageList;
 import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -18,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -176,6 +179,11 @@ public class APIHandler {
                 return targetState.toString();
             }
             else if (cmd.equals(SETBLOCK)) {
+                String[] arg_content = args.split(",");
+                BlockPos targetPos = new BlockPos(Integer.parseInt(arg_content[0]), Integer.parseInt(arg_content[1]), Integer.parseInt(arg_content[2]));
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(arg_content[5]));
+                assert block != null;
+                myWorld.setBlockState(targetPos, block.getDefaultState());
                 return null;
             }
             else if (cmd.equals(SETBLOCKS)) {
