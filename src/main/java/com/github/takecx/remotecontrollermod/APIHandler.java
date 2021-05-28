@@ -187,6 +187,23 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(SETBLOCKS)) {
+                String[] arg_content = args.split(",");
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(arg_content[8]));
+                assert block != null;
+                int startX = Integer.parseInt(arg_content[0]);
+                int startY = Integer.parseInt(arg_content[1]);
+                int startZ = Integer.parseInt(arg_content[2]);
+                int endX = Integer.parseInt(arg_content[3]);
+                int endY = Integer.parseInt(arg_content[4]);
+                int endZ = Integer.parseInt(arg_content[5]);
+                for (int x = startX; x < endX; x++) {
+                    for (int y = startY; y < endY; y++) {
+                        for (int z = startZ; z < endZ; z++) {
+                            BlockPos targetPos = new BlockPos(x,y,z);
+                            myWorld.setBlockState(targetPos, block.getDefaultState());
+                        }
+                    }
+                }
                 return null;
             }
             else if (cmd.equals(WORLDSPAWNENTITY)) {
