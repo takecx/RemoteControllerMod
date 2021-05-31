@@ -257,6 +257,9 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(WORLDSPAWNPARTICLE)) {
+                String[] arg_items = args.split(",");
+                assert Minecraft.getInstance().player != null;
+                Minecraft.getInstance().player.sendChatMessage("/particle " + arg_items[9] + " " + arg_items[1] + " " + arg_items[2] + " " + arg_items[3] + " " + arg_items[4] + " " + arg_items[5] + " " + arg_items[6] + " " + arg_items[7] + " " + arg_items[8]);
                 return null;
             }
             else if (cmd.equals(ENTITYGETPOS)) {
