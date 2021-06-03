@@ -280,6 +280,9 @@ public class APIHandler {
                 return null;
             }
             else if (cmd.equals(GIVEENCHANT)) {
+                String[] arg_items = args.split(",");
+                assert Minecraft.getInstance().player != null;
+                Minecraft.getInstance().player.sendChatMessage("/enchant @p " + arg_items[2] + " " + arg_items[1]);
                 return null;
             }
             return null;
