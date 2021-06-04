@@ -177,7 +177,7 @@ public class APIHandler {
                 String[] coords = args.split(",");
                 BlockPos targetPos = new BlockPos(Integer.parseInt(coords[0]),Integer.parseInt(coords[1]),Integer.parseInt(coords[2]));
                 BlockState targetState = this.myWorld.getBlockState(targetPos);
-                return targetState.toString();
+                return targetState.getBlock().getTranslationKey();
             }
             else if (cmd.equals(SETBLOCK)) {
                 String[] arg_content = args.split(",");
