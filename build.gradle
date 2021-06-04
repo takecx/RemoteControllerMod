@@ -112,8 +112,8 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    
-    compile "org.java-websocket:Java-WebSocket:1.5.1"
+
+    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
