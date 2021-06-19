@@ -18,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -130,6 +131,14 @@ public class Remotecontrollermod {
 
             wsServer = new WSServer(new InetSocketAddress(host, port));
             wsServer.start();
+        }
+    }
+
+    @SubscribeEvent
+    public void onServerStopping(FMLServerStoppingEvent event) throws InterruptedException {
+        LOGGER.info("GOODBYE from server stopping");
+        if (!event.getServer().getWorld(World.OVERWORLD).isRemote) {
+            wsServer.stop();
         }
     }
 
