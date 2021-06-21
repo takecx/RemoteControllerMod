@@ -37,6 +37,7 @@ import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.ai.attributes.Attributes;
 
 // websocket
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import java.util.Optional;
@@ -63,6 +64,7 @@ public class Remotecontrollermod {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private WSServer wsServer = null;
+    private SocketServer sServer = null;
 
     public static final EntityType AGENT =
             EntityType.Builder.create(AgentEntity::new, EntityClassification.CREATURE)
@@ -121,16 +123,32 @@ public class Remotecontrollermod {
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) throws IOException {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
         if(!event.getServer().getWorld(World.OVERWORLD).isRemote){
             String host = "localhost";
-//        int port = 53199;
-            int port = 14711;
 
+            // Start WebSocket Server
+            //        int port = 53199;
+            int port = 14711;
             wsServer = new WSServer(new InetSocketAddress(host, port));
             wsServer.start();
+
+            // Start Socket Server
+            int socketPort = 14712;
+            sServer = new SocketServer(socketPort);
+            new Thread(() -> {
+                try {
+                    sServer.communicate();
+                } catch(Exception e) {
+                    LOGGER.error(e);
+                } finally {
+                    LOGGER.info("Closing RemoteControllerMod");
+                    if (sServer != null)
+                        sServer.Close();
+                }
+            }).start();
         }
     }
 
