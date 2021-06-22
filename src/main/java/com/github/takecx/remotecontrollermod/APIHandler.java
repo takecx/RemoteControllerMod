@@ -182,14 +182,14 @@ public class APIHandler {
             else if (cmd.equals(SETBLOCK)) {
                 String[] arg_content = args.split(",");
                 BlockPos targetPos = new BlockPos(Integer.parseInt(arg_content[0]), Integer.parseInt(arg_content[1]), Integer.parseInt(arg_content[2]));
-                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(arg_content[5]));
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(arg_content[3]));
                 assert block != null;
                 myWorld.setBlockState(targetPos, block.getDefaultState());
                 return null;
             }
             else if (cmd.equals(SETBLOCKS)) {
                 String[] arg_content = args.split(",");
-                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(arg_content[8]));
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(arg_content[6]));
                 assert block != null;
                 int startX = Integer.parseInt(arg_content[0]);
                 int startY = Integer.parseInt(arg_content[1]);
@@ -259,7 +259,7 @@ public class APIHandler {
             else if (cmd.equals(WORLDSPAWNPARTICLE)) {
                 String[] arg_items = args.split(",");
                 assert Minecraft.getInstance().player != null;
-                Minecraft.getInstance().player.sendChatMessage("/particle " + arg_items[9] + " " + arg_items[1] + " " + arg_items[2] + " " + arg_items[3] + " " + arg_items[4] + " " + arg_items[5] + " " + arg_items[6] + " " + arg_items[7] + " " + arg_items[8]);
+                Minecraft.getInstance().player.sendChatMessage("/particle " + arg_items[0] + " " + arg_items[1] + " " + arg_items[2] + " " + arg_items[3] + " " + arg_items[4] + " " + arg_items[5] + " " + arg_items[6] + " " + arg_items[7] + " " + arg_items[8]);
                 return null;
             }
             else if (cmd.equals(ENTITYGETPOS)) {
