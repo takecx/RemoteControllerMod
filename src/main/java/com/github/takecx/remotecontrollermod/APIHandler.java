@@ -197,9 +197,9 @@ public class APIHandler {
                 int endX = Integer.parseInt(arg_content[3]);
                 int endY = Integer.parseInt(arg_content[4]);
                 int endZ = Integer.parseInt(arg_content[5]);
-                for (int x = startX; x < endX; x++) {
-                    for (int y = startY; y < endY; y++) {
-                        for (int z = startZ; z < endZ; z++) {
+                for (int x = startX; x < endX + 1; x++) {
+                    for (int y = startY; y < endY + 1; y++) {
+                        for (int z = startZ; z < endZ + 1; z++) {
                             BlockPos targetPos = new BlockPos(x,y,z);
                             myWorld.setBlockState(targetPos, block.getDefaultState());
                         }
