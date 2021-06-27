@@ -3,7 +3,7 @@ package com.github.takecx.remotecontrollermod;
 import com.github.takecx.remotecontrollermod.lists.BlockList;
 import com.github.takecx.remotecontrollermod.lists.ItemList;
 import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
-import com.github.takecx.remotecontrollermod.messages.SpawnEntityMessageToClient;
+//import com.github.takecx.remotecontrollermod.messages.SpawnEntityMessageToClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.*;
@@ -226,10 +226,10 @@ public class Remotecontrollermod {
                     MoveCameraMessageToClient::encode, MoveCameraMessageToClient::decode,
                     MessageHandlerOnClient::onMoveCameraMessageReceived,
                     Optional.of(PLAY_TO_CLIENT));
-            simpleChannel.registerMessage(SPAWN_ENTITY_MESSAGE_ID, SpawnEntityMessageToClient.class,
-                    SpawnEntityMessageToClient::encode, SpawnEntityMessageToClient::decode,
-                    MessageHandlerOnClient::onSpawnEntityMessageReceived,
-                    Optional.of(PLAY_TO_CLIENT));
+//            simpleChannel.registerMessage(SPAWN_ENTITY_MESSAGE_ID, SpawnEntityMessageToClient.class,
+//                    SpawnEntityMessageToClient::encode, SpawnEntityMessageToClient::decode,
+//                    MessageHandlerOnClient::onSpawnEntityMessageReceived,
+//                    Optional.of(PLAY_TO_CLIENT));
 
             // it is possible to register the same message class and handler on both sides if you want, eg,
 //    simpleChannel.registerMessage(AIRSTRIKE_MESSAGE_ID, AirstrikeMessageToServer.class,
