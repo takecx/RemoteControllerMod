@@ -1,5 +1,9 @@
 apply plugin:'java'
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
