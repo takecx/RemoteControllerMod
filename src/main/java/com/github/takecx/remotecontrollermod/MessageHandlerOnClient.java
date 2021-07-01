@@ -2,7 +2,7 @@ package com.github.takecx.remotecontrollermod;
 
 import com.github.takecx.remotecontrollermod.messages.MessageBase;
 import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
-import com.github.takecx.remotecontrollermod.messages.SpawnEntityMessageToClient;
+//import com.github.takecx.remotecontrollermod.messages.SpawnEntityMessageToClient;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -81,28 +81,28 @@ public class MessageHandlerOnClient {
                 RenderSystem.translatef(0.5F,0.5F,0.5F);
   }
 
-  public static void onSpawnEntityMessageReceived(final SpawnEntityMessageToClient message, Supplier<NetworkEvent.Context> ctxSupplier) {
-    if(!checkMessage(message,ctxSupplier)) return;
-
-    // This code creates a new task which will be executed by the client during the next tick
-    //  In this case, the task is to call messageHandlerOnClient.processMessage(worldclient, message)
-    NetworkEvent.Context ctx = ctxSupplier.get();
-    LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
-    Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
-    ctx.enqueueWork(() -> processSpawnEntityMessage(clientWorld.get(), message));
-  }
+//  public static void onSpawnEntityMessageReceived(final SpawnEntityMessageToClient message, Supplier<NetworkEvent.Context> ctxSupplier) {
+//    if(!checkMessage(message,ctxSupplier)) return;
+//
+//    // This code creates a new task which will be executed by the client during the next tick
+//    //  In this case, the task is to call messageHandlerOnClient.processMessage(worldclient, message)
+//    NetworkEvent.Context ctx = ctxSupplier.get();
+//    LogicalSide sideReceived = ctx.getDirection().getReceptionSide();
+//    Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+//    ctx.enqueueWork(() -> processSpawnEntityMessage(clientWorld.get(), message));
+//  }
 
   // This message is called from the Client thread.
   //   It spawns a number of Particle particles at the target location within a short range around the target location
-  private static void processSpawnEntityMessage(ClientWorld worldClient, SpawnEntityMessageToClient message)
-  {
-    Optional<Entity> entity_op = EntityType.loadEntityUnchecked(message.getTargetEntity(),worldClient);
-    entity_op.ifPresent(entity -> {
-      BlockPos entityPos = message.getTargetCoordinates();
-      entity.setPosition(entityPos.getX(),entityPos.getY(),entityPos.getZ());
-      worldClient.addEntity(entity);
-    });
-  }
+//  private static void processSpawnEntityMessage(ClientWorld worldClient, SpawnEntityMessageToClient message)
+//  {
+//    Optional<Entity> entity_op = EntityType.loadEntityUnchecked(message.getTargetEntity(),worldClient);
+//    entity_op.ifPresent(entity -> {
+//      BlockPos entityPos = message.getTargetCoordinates();
+//      entity.setPosition(entityPos.getX(),entityPos.getY(),entityPos.getZ());
+//      worldClient.addEntity(entity);
+//    });
+//  }
 
   public static boolean isThisProtocolAcceptedByClient(String protocolVersion) {
     return Remotecontrollermod.MESSAGE_PROTOCOL_VERSION.equals(protocolVersion);
