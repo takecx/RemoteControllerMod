@@ -3,6 +3,9 @@ package com.github.takecx.remotecontrollermod;
 import com.github.takecx.remotecontrollermod.lists.BlockList;
 import com.github.takecx.remotecontrollermod.lists.ItemList;
 import com.github.takecx.remotecontrollermod.messages.MoveCameraMessageToClient;
+import com.github.takecx.remotecontrollermod.network.NetworkHandler;
+import com.github.takecx.remotecontrollermod.network.SocketServerManager;
+
 //import com.github.takecx.remotecontrollermod.messages.SpawnEntityMessageToClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -75,17 +78,25 @@ public class Remotecontrollermod {
                     .group(ItemGroup.MISC));
 
     public Remotecontrollermod() {
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        // // Register the setup method for modloading
+        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        // // Register the enqueueIMC method for modloading
+        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        // // Register the processIMC method for modloading
+        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        // // Register the doClientStuff method for modloading
+        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+        // // Register ourselves for server and other game events we are interested in
+        // MinecraftForge.EVENT_BUS.register(this);
+        // イベントバス取得
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        // ネットワーク登録
+        NetworkHandler.register();
+
+        // サーバーイベントリスナー登録
+        modEventBus.register(SocketServerManager.class);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
