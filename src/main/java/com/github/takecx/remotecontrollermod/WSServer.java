@@ -3,6 +3,8 @@ package com.github.takecx.remotecontrollermod;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -10,6 +12,7 @@ import org.java_websocket.server.WebSocketServer;
 public class WSServer extends WebSocketServer {
 
     private APIHandler myAPIHandler = null;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public WSServer(InetSocketAddress address) {
         super(address);
@@ -22,18 +25,18 @@ public class WSServer extends WebSocketServer {
         conn.send("Welcome to the server!"); // This method sends a message to the new client
         broadcast("new connection: " + handshake.getResourceDescriptor()); // This method sends a message to all clients
                                                                            // connected
-        System.out.println("new connection to " + conn.getRemoteSocketAddress());
+        LOGGER.debug("new connection to " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println(
+        LOGGER.debug(
                 "closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println("received message from " + conn.getRemoteSocketAddress() + ": " + message);
+        LOGGER.debug("received message from " + conn.getRemoteSocketAddress() + ": " + message);
         Object result = null;
         try {
             result = this.myAPIHandler.Process(message);
@@ -49,17 +52,17 @@ public class WSServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer message) {
-        System.out.println("received ByteBuffer from " + conn.getRemoteSocketAddress());
+        LOGGER.debug("received ByteBuffer from " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        System.err.println("an error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
+        LOGGER.error("an error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
     }
 
     @Override
     public void onStart() {
 
-        System.out.println("server started successfully");
+        LOGGER.debug("server started successfully");
     }
 }
