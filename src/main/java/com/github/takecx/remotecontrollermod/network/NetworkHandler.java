@@ -1,18 +1,18 @@
 package com.github.takecx.remotecontrollermod.network;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.SimpleChannel;
-import net.minecraftforge.network.event.EventNetworkChannel;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel INSTANCE = ChannelBuilder.named(new ResourceLocation("remotecontrollermod", "main"))
-            .networkProtocolVersion(PROTOCOL_VERSION::toString)
-            .clientAcceptedVersions(PROTOCOL_VERSION::equals)
-            .serverAcceptedVersions(PROTOCOL_VERSION::equals)
-            .simpleChannel();
+    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation("remotecontrollermod", "main"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals
+    );
 
     public static void register() {
         int id = 0;

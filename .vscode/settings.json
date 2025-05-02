@@ -1,0 +1,14 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.import.gradle.java.home":"C:\\openjdk-17_windows-x64_bin\\jdk-17",
+    "java.project.sourcePaths": ["src/main/java"],
+    "java.home": "C:\\openjdk-17_windows-x64_bin\\jdk-17",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-17",
+            "path": "C:\\openjdk-17_windows-x64_bin\\jdk-17",
+            "default": true
+        }
+    ],
+    "java.debug.logLevel": "verbose"
+}

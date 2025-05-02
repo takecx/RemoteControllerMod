@@ -11,11 +11,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 @Mod.EventBusSubscriber
+// @Mod.EventBusSubscriber(modid = "remotecontrollermod", bus =
+// Mod.EventBusSubscriber.Bus.FORGE)
 public class SocketServerManager {
     private static ServerSocket serverSocket;
     private static Thread serverThread;
 
     @SubscribeEvent
+    // @Mod.EventBusSubscriber(modid = "remotecontrollermod", bus =
+    // Mod.EventBusSubscriber.Bus.FORGE)
     public static void onServerStarted(ServerStartedEvent event) {
         serverThread = new Thread(() -> {
             try {

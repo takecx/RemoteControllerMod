@@ -5,6 +5,10 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
+jar {
+    exclude 'org/slf4j/**'
+}
+
 version = mod_version
 group = mod_group_id
 archivesBaseName = 'remotecontrollermod'
