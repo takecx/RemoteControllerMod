@@ -1,4 +1,4 @@
-# Remote Controller
+# [Remote Controller Mod](https://www.curseforge.com/minecraft/mc-mods/remote-controller)
 
 
 ## UPDATE
