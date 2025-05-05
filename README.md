@@ -3,9 +3,9 @@
 
 ## UPDATE
 
-Remote Controller Mod for 1.16.5 is now available!!
+Remote Controller Mod for 1.20.1 is now available!!
 
-[Scratch for 1.16.5](https://takecx.github.io/scratch-gui/1-16-5/)
+[Scratch for 1.20.1](https://takecx.github.io/scratch-gui/1-20-1/)
 
 ## Summary
 Minecraft Remote controller
